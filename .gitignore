@@ -1,0 +1,45 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# --- Virtual environments ---
+venv/
+.venv/
+env/
+ENV/
+
+# --- Environment / secrets — the most important lines here ---
+.env
+.env.*
+!.env.example
+
+# --- Alembic ---
+# migration files themselves ARE tracked (commit these!) —
+# this just excludes any local sqlite fallback DBs if you ever use one
+*.db
+*.sqlite3
+
+# --- Testing / coverage ---
+.pytest_cache/
+.coverage
+htmlcov/
+
+# --- IDE / editor ---
+.vscode/
+.idea/
+*.swp
+
+# --- OS cruft ---
+.DS_Store
+Thumbs.db
+
+# --- Docker ---
+# (docker-compose.yml itself should stay tracked — just excluding any
+# local override files if you ever add one)
+docker-compose.override.yml
+
+# --- Logs ---
+*.log
