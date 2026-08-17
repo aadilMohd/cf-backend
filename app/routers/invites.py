@@ -4,6 +4,7 @@ from app.security import get_db, get_current_user
 from app.models.models import User, Cheque, Invite, ChequeState
 from app.schemas import InviteCreate, InviteOut
 from app.notifications import send_sms
+from datetime import timedelta
 
 router = APIRouter(prefix="/invites", tags=["invites"])
 
@@ -21,6 +22,14 @@ def send_invite(
     if cheque.current_state != ChequeState.pending_registration:
         raise HTTPException(400, "This cheque's payee is already registered")
 
+    recent = (
+        db.query(Invite)
+        .filter(Invite.cheque_id == cheque.id, Invite.sent_at > datetime.utcnow() - timedelta(minutes=5))
+        .first()
+    )
+
+    if recent:
+        raise HTTPException(429, "An invite was already sent recently. Try again in a few minutes.")
     invite = Invite(cheque_id=cheque.id, phone_number=cheque.payee_phone)
     db.add(invite)
     db.commit()
