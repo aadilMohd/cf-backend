@@ -3,8 +3,11 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 from app.config import settings
-from app.database import SessionLocal
-from app.models import User
+from app.core.database import SessionLocal
+from app.models.models import User
+from pydantic import BaseModel
+from uuid import UUID
+from datetime import datetime
 
 bearer_scheme = HTTPBearer()
 

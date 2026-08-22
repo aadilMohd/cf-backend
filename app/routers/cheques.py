@@ -1,10 +1,14 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.security import get_db, get_current_user
-from app.models import User, Cheque, StateTransition, ChequeState
-from app.schemas import ChequeCreate, ChequeOut
+from app.models.models import User, Cheque, StateTransition, ChequeState
+from app.schemas import ChequeCreate, ChequeOut, ChequeDetail
 from fastapi import Query
+from pydantic import BaseModel
+from uuid import UUID
+from app.security import ChequeListItem
 from typing import Literal
+
 
 router = APIRouter(prefix="/cheques", tags=["cheques"])
 

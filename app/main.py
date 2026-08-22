@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 # Base.metadata.create_all(bind=engine)
 
 # Import all API routers
-from app.routers import auth, cheques, users
+from app.routers import auth, cheques, users, invites
 
 app = FastAPI(title="ChequeFlow Engine", version="1.0")
 
