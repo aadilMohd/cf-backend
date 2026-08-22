@@ -1,4 +1,4 @@
-from pydantic_setting import BaseSettings
+from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     database_url: str
@@ -6,6 +6,6 @@ class Settings(BaseSettings):
     otp_provider_api_key: str
 
     class Config:
-        env_file: ".env"
+        env_file = ".env"
 
-setting= Settings()
+settings = Settings()

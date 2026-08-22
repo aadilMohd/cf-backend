@@ -1,15 +1,15 @@
-import fastapi from APIRouter,HTTPException,
+from fastapi import APIRouter,HTTPException
 from pydantic import BaseModel
 import uuid
-from app.database import SessionLocal
-from app.models import User
+from app.core.database import SessionLocal
+from app.models.models import User
 from fastapi import Depends
 from sqlalchemy.orm import Session
 import jwt, os, datetime
-from app.state_transitions import resolve_pending_cheques_for_user
+from app.state_transition import resolve_pending_cheques_for_user
 
 
-router = APIRounter(prefix="/auth",tags["auth"])
+router = APIRouter(prefix="/auth", tags=["auth"])
 
 otp_sessions = {}
 
