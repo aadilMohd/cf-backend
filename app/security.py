@@ -24,7 +24,7 @@ def get_current_user(
 
     token = credentials.credentials
     try:
-        payload = jwt.decode(token,settings.jwt_secret,algoritms=["HS256"])
+        payload = jwt.decode(token,settings.jwt_secret,algorithms=["HS256"])
         user_id = payload.get("sub")
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=401,detail="Token expired")

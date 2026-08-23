@@ -4,7 +4,7 @@ from datetime import datetime
 
 class UserSearchResult(BaseModel):
     id: UUID
-    name : str | None
+    name: str | None = None
 
     class Config:
         from_attributes = True
@@ -72,6 +72,18 @@ class InviteOut(BaseModel):
     phone_number: str
     sent_at: datetime
     claimed_at: datetime | None
+
+    class Config:
+        from_attributes = True
+
+class ChequeListItem(BaseModel):
+    id: UUID
+    payee_phone: str
+    payee_name: str | None = None
+    amount_paise: int
+    due_date: datetime
+    current_state: str
+    memo: str | None
 
     class Config:
         from_attributes = True

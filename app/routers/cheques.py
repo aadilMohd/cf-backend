@@ -1,14 +1,17 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
-from app.security import get_db, get_current_user
-from app.models.models import User, Cheque, StateTransition, ChequeState
-from app.schemas import ChequeCreate, ChequeOut, ChequeDetail
-from fastapi import Query
 from pydantic import BaseModel
 from uuid import UUID
-from app.security import ChequeListItem
 from typing import Literal
 
+from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.exceptions import InvalidSignature
+
+from app.security import get_db, get_current_user
+from app.models.models import User, Cheque, StateTransition, ChequeState, Signature
+from app.schemas import ChequeCreate, ChequeOut, ChequeDetail, ChequeListItem
+from app.crypto_utils import compute_cheque_hash
 
 router = APIRouter(prefix="/cheques", tags=["cheques"])
 
