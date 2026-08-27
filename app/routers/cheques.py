@@ -141,11 +141,11 @@ def cancel_cheque(
         raise HTTPException(404, "Cheque not found")
     if cheque.drawer_id != current_user.id:
         raise HTTPException(403, "Only the drawer can cancel this cheque")
-    if cheque.current_state not in (ChequeState.draft, ChequeState.created):
+    if cheque.current_state not in (ChequeState.draft, ChequeState.created,ChequeState.pending_registration):
         raise HTTPException(
             400, f"Cannot cancel a cheque in state {cheque.current_state.value}"
         )
-
+    
     old_state = cheque.current_state
     cheque.current_state = ChequeState.cancelled
     db.add(StateTransition(
