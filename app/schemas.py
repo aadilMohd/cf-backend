@@ -80,6 +80,7 @@ class ChequeListItem(BaseModel):
     id: UUID
     payee_phone: str
     payee_name: str | None = None
+    drawer_name: str | None = None
     amount_paise: int
     due_date: datetime
     current_state: str
