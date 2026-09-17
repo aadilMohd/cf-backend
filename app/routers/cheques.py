@@ -72,7 +72,7 @@ def sign_cheque(
     signature_bytes = bytes.fromhex(payload.signature_hex)
 
     try:
-        public_key.verify(signature_bytes, expected_hash, ec.ECDSA(hashes.SHA256()))
+        public_key.verify(signature_bytes, expected_hash)
     except InvalidSignature:
         raise HTTPException(400, "Signature verification failed")
     
