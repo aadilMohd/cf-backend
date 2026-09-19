@@ -193,3 +193,32 @@ def get_cheque_detail(
         created_at=cheque.created_at,
         transitions=transitions,
     )
+
+@router.post("/{cheque_id}/encash", response_model=ChequeOut)
+def encash_cheque(
+    cheque_id: UUID,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    cheque = db.query(Cheque).filter(Cheque.id == cheque_id).first()
+    if not cheque:
+        raise HTTPException(404, "Cheque not found")
+    if cheque.payee_id != current_user.id:
+        raise HTTPException(403, "Only the payee can mark this cheque as encashed")
+    if cheque.current_state != ChequeState.created:
+        raise HTTPException(
+            400, f"Cannot encash a cheque in state {cheque.current_state.value}"
+        )
+
+    old_state = cheque.current_state
+    cheque.current_state = ChequeState.encashed
+    db.add(StateTransition(
+        cheque_id=cheque.id,
+        from_state=old_state.value,
+        to_state="encashed",
+        actor_id=current_user.id,
+        reason="Marked as encashed by payee",
+    ))
+    db.commit()
+    db.refresh(cheque)
+    return cheque
