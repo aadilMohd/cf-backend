@@ -29,3 +29,15 @@ app.include_router(invites.router)
 @app.get("/")
 def read_root():
     return {"status": "ChequeFlow Core Engine Running"}
+
+@app.post("/_debug/trigger-reminders")
+def debug_trigger_reminders():
+    check_and_send_reminders()
+    return {"status": "triggered"}
+
+@app.post("/_debug/test-push")
+def debug_test_push(phone: str, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.phone_number == phone).first()
+    if not user or not user.fcm_token:
+        return {"error": "no token"}
+    return {"sent": send_push(user.fcm_token, "Test", "This is a test notification")}

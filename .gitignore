@@ -15,6 +15,7 @@ ENV/
 .env
 .env.*
 !.env.example
+secrets/
 
 # --- Alembic ---
 # migration files themselves ARE tracked (commit these!) —

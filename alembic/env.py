@@ -6,7 +6,7 @@ from sqlalchemy import pool
 from alembic import context
 
 from app.core.database import Base
-from app.models.models import User,Cheque, StateTransition, Signature
+from app.models.models import User,Cheque, StateTransition, Signature, Reminder
 target_metadata = Base.metadata
 
 # this is the Alembic Config object, which provides

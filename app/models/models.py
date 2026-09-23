@@ -58,6 +58,7 @@ class User(Base):
     role = Column(String,nullable=False,default="owner")
     public_key = Column(String,nullable=True)
     created_at = Column(DateTime(timezone=True),server_default=func.now())
+    fcm_token = Column(String, nullable=True)
 
 class Signature(Base):
     __tablename__ = "signatures"
@@ -85,3 +86,11 @@ class Invite(Base):
     claimed_at = Column(DateTime, nullable=True)
 
     cheque = relationship("Cheque")
+
+class Reminder(Base):
+    __tablename__ = "reminders"
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    cheque_id = Column(UUID(as_uuid=True), ForeignKey("cheques.id"), nullable=False)
+    recipient_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    threshold_days = Column(Integer, nullable=False)
+    sent_at = Column(DateTime, default=datetime.utcnow)
