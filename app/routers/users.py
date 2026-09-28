@@ -39,3 +39,16 @@ def upload_public_key(
     current_user.public_key = payload.public_key_pem
     db.commit()
     return {"status": "ok"}
+
+class FcmTokenUpdate(BaseModel):
+    fcm_token: str
+
+@router.put("/me/fcm-token")
+def update_fcm_token(
+    payload: FcmTokenUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    current_user.fcm_token = payload.fcm_token
+    db.commit()
+    return {"status": "ok"}

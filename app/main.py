@@ -30,14 +30,27 @@ app.include_router(invites.router)
 def read_root():
     return {"status": "ChequeFlow Core Engine Running"}
 
+scheduler = BackgroundScheduler()
+
+@app.on_event("startup")
+def start_scheduler():
+    scheduler.add_job(
+        check_and_send_reminders, "interval", hours=1,
+        max_instances=1, coalesce=True, id="cheque-reminders",
+    )
+    scheduler.start()
+
+@app.on_event("shutdown")
+def stop_scheduler():
+    scheduler.shutdown(wait=False)
+
+
+# TEMPORARY: delete both before the pilot
 @app.post("/_debug/trigger-reminders")
-def debug_trigger_reminders():
+def debug_trigger_reminders(_: User = Depends(get_current_user)):
     check_and_send_reminders()
     return {"status": "triggered"}
 
 @app.post("/_debug/test-push")
-def debug_test_push(phone: str, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.phone_number == phone).first()
-    if not user or not user.fcm_token:
-        return {"error": "no token"}
-    return {"sent": send_push(user.fcm_token, "Test", "This is a test notification")}
+def debug_test_push(current_user: User = Depends(get_current_user)):
+    return {"sent": send_push(current_user.fcm_token, "Test", "This is a test notification")}
