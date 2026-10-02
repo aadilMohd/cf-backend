@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from apscheduler.schedulers.background import BackgroundScheduler
 
 # Database imports (uncomment if using automatic table creation on startup)
 # from app.database import engine, Base
