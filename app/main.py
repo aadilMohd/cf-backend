@@ -1,6 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from apscheduler.schedulers.background import BackgroundScheduler
+from app.remainders import check_and_send_reminders
+from app.push_notifications import send_push
+from app.security import get_current_user
+from app.models.models import User
 
 # Database imports (uncomment if using automatic table creation on startup)
 # from app.database import engine, Base
