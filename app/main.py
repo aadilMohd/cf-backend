@@ -1,10 +1,13 @@
-from fastapi import FastAPI, Depends
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from apscheduler.schedulers.background import BackgroundScheduler
+
+from app.config import settings
+from app.models.models import User
+from app.security import get_current_user
 from app.remainders import check_and_send_reminders
 from app.push_notifications import send_push
-from app.security import get_current_user
-from app.models.models import User
+from app.routers import auth, cheques, users, invites
 
 # Database imports (uncomment if using automatic table creation on startup)
 # from app.database import engine, Base
@@ -51,11 +54,12 @@ def stop_scheduler():
 
 
 # TEMPORARY: delete both before the pilot
-@app.post("/_debug/trigger-reminders")
-def debug_trigger_reminders(_: User = Depends(get_current_user)):
-    check_and_send_reminders()
-    return {"status": "triggered"}
+if settings.environment == "dev":
+    @app.post("/_debug/trigger-reminders")
+    def debug_trigger_reminders(_: User = Depends(get_current_user)):
+        check_and_send_reminders()
+        return {"status": "triggered"}
 
-@app.post("/_debug/test-push")
-def debug_test_push(current_user: User = Depends(get_current_user)):
-    return {"sent": send_push(current_user.fcm_token, "Test", "This is a test notification")}
+    @app.post("/_debug/test-push")
+    def debug_test_push(current_user: User = Depends(get_current_user)):
+        return {"sent": send_push(current_user.fcm_token, "Test", "This is a test notification")}
